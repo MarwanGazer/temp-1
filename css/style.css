@@ -137,7 +137,19 @@ nav h3 span:last-child {
 nav .links {
     position: relative;
 }
-
+.arrow::before{
+    content: "";
+    height: 0;
+    width: 0;
+    position: absolute;
+    border: 30px solid;
+    border-color: transparent transparent #32d3e2 transparent;
+}
+.top::before{
+    top: -60px;
+    left: 50%;
+    transform: translate(-50%,0);
+}
 nav .icon {
     display: flex;
     flex-direction: column;
