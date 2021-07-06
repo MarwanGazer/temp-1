@@ -1,0 +1,203 @@
+jQuery(function ($) {
+  "use strict";
+
+  // Remove Navbar Fixed Class On Scroll
+  var navFixed = $(".navbar-fixed-top");
+  $(window).on("scroll", function () {
+    $(this).scrollTop() > 200 ? navFixed.addClass("home-nav") : navFixed.removeClass("home-nav");
+  });
+  $(this).scrollTop() > 200 ? navFixed.addClass("home-nav") : navFixed.removeClass("home-nav");
+
+  // Learning Paths Show Content
+  $(".step-title").on("click", function () {
+    $(this).toggleClass("opened");
+    $(this).next(".step").slideToggle();
+  });
+
+  // Scroll To Top
+  var scrollToTop = $(".scroll-to-top");
+  $(window).on("scroll", function () {
+    if ($(window).scrollTop() >= 500) {
+      if (!scrollToTop.is(":visible")) {
+        scrollToTop.fadeIn(300);
+      }
+    } else {
+      if (scrollToTop.is(":visible")) {
+        scrollToTop.fadeOut(300);
+      }
+    }
+  });
+  $(".scroll-to-top span").on("click", function () {
+    $("html, body").animate(
+      {
+        scrollTop: 0,
+      },
+      1000
+    );
+  });
+
+  $(window).on("load", function () {
+    "use strict";
+    $(".tutorial-demo style").detach().appendTo("head");
+  });
+
+  // Switch Content on Learning Paths Page
+  $(".switch-learning-content span").on("click", function () {
+    $(this).addClass("active").siblings().removeClass("active");
+    if ($(this).hasClass("choose-no")) {
+      $(".path-steps .advanced-skills").hide();
+    } else {
+      $(".path-steps .advanced-skills").fadeIn();
+    }
+  });
+
+  // Sort Channels List
+  var alphabeticallyOrderedDivs = $(".sorted-elements .row .col-sm-6").sort(function (a, b) {
+    return String.prototype.localeCompare.call(
+      $(a).find("h3").text().toLowerCase(),
+      $(b).find("h3").text().toLowerCase()
+    );
+  });
+  var theContainer = $(".sorted-elements .row");
+  theContainer.detach().empty().append(alphabeticallyOrderedDivs);
+  $(".sorted-elements").append(theContainer);
+
+  // Filter Channels
+  $(".choose-tag select").on("change", function () {
+    $(".tag-all").parent().hide();
+    $("." + $(this).find("option:selected").data("class"))
+      .parent()
+      .fadeIn();
+  });
+
+  // Goals
+
+  $(".goal-box").each(function () {
+    var has = $(this).find(".has").data("has");
+    var target = $(this).find(".target").data("target");
+    var percentage = (parseInt(has) * 100) / parseInt(target);
+    $(this)
+      .find(".the-background span")
+      .css("width", percentage.toFixed(1) + "%");
+    $(this)
+      .find(".the-handle")
+      .text(percentage.toFixed(1) + "%")
+      .css("left", percentage.toFixed(1) + "%");
+  });
+
+  // Total Goals
+  var totalHas = 0;
+  var totalTarget = 0;
+
+  $(".goals-container .has").each(function () {
+    totalHas += parseInt($(this).data("has"));
+  });
+  $(".goals-container .target").each(function () {
+    totalTarget += parseInt($(this).data("target"));
+  });
+
+  var totalPercentage = (totalHas * 100) / totalTarget;
+
+  $(".all-targets").each(function () {
+    $(this).find(".all-has").text(totalHas);
+    $(this).find(".all-target").text(totalTarget);
+    $(this)
+      .find(".the-background span")
+      .css("width", totalPercentage.toFixed(1) + "%");
+    $(this)
+      .find(".the-handle")
+      .text(totalPercentage.toFixed(1) + "%")
+      .css("left", totalPercentage.toFixed(1) + "%");
+  });
+  // Paid Services
+  $(".text-content .plan h4").on("click", function () {
+    $(this).toggleClass("active");
+    $(this).next("ul").slideToggle();
+  });
+  $(".faq-box h3").on("click", function () {
+    $(this).toggleClass("open").next("p").slideToggle();
+  });
+
+  // Task Report Page
+  $(".week-number").on("click", function () {
+    $(this).toggleClass("closed");
+    $(this).next(".week-content").toggle();
+  });
+
+  // Calculate Stars
+  var arrayOfUsers = [];
+  var objectData = {};
+  $(".tasks-report tr").each(function () {
+    arrayOfUsers.push($(this).data("name"));
+  });
+  arrayOfUsers = arrayOfUsers.filter(onlyUnique);
+  for (var i = 0; i < arrayOfUsers.length; i++) {
+    var count = 0;
+    $(".tasks-report tr[data-name='" + arrayOfUsers[i] + "']").each(function () {
+      count += parseInt($(this).data("stars"));
+    });
+    objectData['"' + arrayOfUsers[i] + '"'] = count;
+  }
+  var sortable = [];
+  for (var x in objectData) {
+    sortable.push([x, objectData[x]]);
+  }
+  sortable.sort(function (a, b) {
+    return a[1] - b[1];
+  });
+  sortable.reverse();
+  $(".stars-result").each(function () {
+    for (var i = 0; i < sortable.length - 1; i++) {
+      var n = sortable[i][0].replace(/["']+/g, "");
+      var s = sortable[i][1];
+      $(this).append("<div><span>" + n + "</span><span>" + s + "</span></div>");
+    }
+  });
+
+  /*
+   ** Task Rating
+   */
+
+  $(".challenges-rating li").on("click", function () {
+    $(this).addClass("active").siblings().removeClass("active");
+    $(".challenges-child .box").hide();
+    $(".challenges-child " + $(this).data("class")).fadeIn(300);
+  });
+
+  // Study Plan
+  $(".the-study .toggler").on("click", function () {
+    $(this).toggleClass("open");
+    $(this).next(".all-steps").slideToggle(200);
+  });
+  $(".the-study .side li").on("click", function () {
+    $(this).addClass("active").siblings().removeClass("active");
+    $("html, body").animate(
+      {
+        scrollTop: $("[data-week=" + $(this).attr("id") + "]").offset().top,
+      },
+      800
+    );
+  });
+  $(window).on("scroll", function () {
+    if ($(window).scrollTop() >= $(".the-study").offset().top) {
+      $(".the-study").addClass("passed");
+    } else {
+      $(".the-study").removeClass("passed");
+    }
+    $(".week").each(function () {
+      if ($(window).scrollTop() >= $(this).offset().top) {
+        $(".the-study .side li").removeClass("active");
+        $("#" + $(this).data("week")).addClass("active");
+      }
+    });
+  });
+  if ($(window).scrollTop() >= $(".the-study").offset().top) {
+    $(".the-study").addClass("passed");
+  } else {
+    $(".the-study").removeClass("passed");
+  }
+});
+
+function onlyUnique(value, index, self) {
+  return self.indexOf(value) === index;
+}
